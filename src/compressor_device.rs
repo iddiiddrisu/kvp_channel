@@ -1,10 +1,5 @@
-use biquad::Biquad;
 use nih_plug::buffer::Buffer;
-use nih_plug::{plugin, prelude::*};
-use std::{
-    num::NonZero,
-    sync::Arc,
-};
+use nih_plug::prelude::*;
 use crate::compressor::{Compressor, Ratio, ReactionSpeed};
 use crate::device::Device;
 
@@ -13,48 +8,6 @@ impl Default for CompressorDevice {
         CompressorDevice::new()
     }
 }
-
-// impl Plugin for CompressorDevice {
-//     const NAME: &'static str = "KVP Eq";
-
-//     const VENDOR: &'static str = "KVP Studios";
-
-//     const URL: &'static str = "www.www.com";
-
-//     const EMAIL: &'static str = "x@x.y";
-
-//     const VERSION: &'static str = "0.03-12-experimental";
-
-//     const AUDIO_IO_LAYOUTS: &'static [AudioIOLayout] = &[AudioIOLayout {
-//         main_input_channels: NonZero::new(2),
-//         main_output_channels: NonZero::new(2),
-//         ..AudioIOLayout::const_default()
-//     }];
-
-//     type SysExMessage = ();
-
-//     type BackgroundTask = ();
-
-//     fn params(&self) -> std::sync::Arc<dyn nih_plug::prelude::Params> {
-//         self.compressor_params.clone()
-//     }
-
-//     fn process(
-//         &mut self,
-//         buffer: &mut nih_plug::prelude::Buffer,
-//         aux: &mut nih_plug::prelude::AuxiliaryBuffers,
-//         context: &mut impl nih_plug::prelude::ProcessContext<Self>,
-//     ) -> nih_plug::prelude::ProcessStatus {
-//         self.update(context.transport().sample_rate);
-
-//         self.run(buffer);
-//         ProcessStatus::Normal
-//     }
-
-//     fn reset(&mut self) {
-//         self.reset_state();
-//     }
-// }
 
 #[derive(Params)]
 pub struct CompressorDeviceParams {
@@ -78,14 +31,12 @@ impl CompressorDeviceParams  {
 
 pub struct CompressorDevice {
     compressor: Compressor,
-    // compressor_params: Arc<CompressorDeviceParams>,
 }
 
 impl CompressorDevice {
     fn new() -> Self {
         Self {
             compressor: Compressor::new(44000.0),
-            // compressor_params: Arc::new(CompressorDeviceParams::new()),
         }
     }
 }
@@ -97,13 +48,12 @@ impl Device for CompressorDevice {
         self.compressor.sample_rate = sample_rate;
         self.compressor.threshold = _compressor_params.threshold.value();
         self.compressor.ratio = _compressor_params.ratio.value();
-        // self.compressor.reaction_speed = self.compressor_params.time.value();
         self.compressor.set_reaction_speed(_compressor_params.time.value())
     }
 
     fn run(&mut self, input: &mut Buffer) {
         for mut sample_channels in input.iter_samples() {
-            for (idx, sample) in sample_channels.iter_mut().enumerate() {
+            for (_, sample) in sample_channels.iter_mut().enumerate() {
                 *sample = self.compressor.process(*sample);
             }
         }

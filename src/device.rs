@@ -1,6 +1,5 @@
-use biquad::Biquad;
-use nih_plug::buffer::{self, Buffer};
-use nih_plug::{plugin, prelude::*};
+use nih_plug::buffer::Buffer;
+use nih_plug::prelude::*;
 use std::{
     num::NonZero,
     sync::Arc,
@@ -99,7 +98,7 @@ impl Plugin for KVPChannelPlugin {
     fn process(
         &mut self,
         buffer: &mut Buffer,
-        aux: &mut AuxiliaryBuffers,
+        _: &mut AuxiliaryBuffers,
         context: &mut impl ProcessContext<Self>,
     ) -> ProcessStatus {
         self.update(context.transport().sample_rate);

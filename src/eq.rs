@@ -1,74 +1,7 @@
-use std::process::Output;
 
-use biquad::{self, Biquad, Hertz, ToHertz};
+use biquad::{self, Biquad, ToHertz};
 use nih_plug::prelude::Enum;
 
-// pub struct InputEq {
-//     pub lowpass: biquad::DirectForm1<f32>,
-//     pub highpass: biquad::DirectForm1<f32>,
-// }
-
-// impl InputEq {
-//     pub fn new(sample_rate: f32) -> Self {
-//         let fs = sample_rate.hz();
-//         let lowpass_coeffs = biquad::Coefficients::<f32>::from_params(
-//             biquad::Type::LowPass,
-//             fs,
-//             20.khz(),
-//             biquad::Q_BUTTERWORTH_F32,
-//         )
-//         .unwrap();
-//         let highpass_coeffs = biquad::Coefficients::<f32>::from_params(
-//             biquad::Type::HighPass,
-//             fs,
-//             20.hz(),
-//             biquad::Q_BUTTERWORTH_F32,
-//         )
-//         .unwrap();
-
-//         let lowpass = biquad::DirectForm1::new(lowpass_coeffs);
-//         let highpass = biquad::DirectForm1::new(highpass_coeffs);
-//         Self { lowpass, highpass }
-//     }
-
-//     pub fn update_lowpass(&mut self, cutoff: f32, sample_rate: f32) {
-//         let fs = sample_rate.hz();
-//         let coeffs = biquad::Coefficients::<f32>::from_params(
-//             biquad::Type::LowPass,
-//             fs,
-//             cutoff.hz(),
-//             biquad::Q_BUTTERWORTH_F32,
-//         )
-//         .unwrap();
-//         self.lowpass.update_coefficients(coeffs);
-//     }
-
-//     pub fn update_highpass(&mut self, cutoff: f32, sample_rate: f32) {
-//         let fs = sample_rate.hz();
-//         let coeffs = biquad::Coefficients::<f32>::from_params(
-//             biquad::Type::HighPass,
-//             fs,
-//             cutoff.hz(),
-//             biquad::Q_BUTTERWORTH_F32,
-//         )
-//         .unwrap();
-//         self.highpass.update_coefficients(coeffs);
-//     }
-
-//     //Get reference to the sample and change the sample
-//     pub fn process(&mut self, sample: &mut f32) {
-//         *sample = self.lowpass.run(*sample);
-//         *sample = self.highpass.run(*sample);
-//     }
-
-//     pub fn reset(&mut self) {
-//         self.lowpass.reset_state();
-//         self.highpass.reset_state();
-//     }
-// }
-
-
-// use biquad::{self, Biquad, Hertz, ToHertz};
 
 pub struct InputEq {
     // Using multiple filters in series to create steeper slopes

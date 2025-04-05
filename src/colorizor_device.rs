@@ -1,8 +1,5 @@
-use nih_plug::buffer::{Buffer};
+use nih_plug::buffer::Buffer;
 use nih_plug::prelude::*;
-use std::num::NonZero;
-use std::sync::Arc;
-
 use crate::colorizer::{Colorizer, ColorType};
 use crate::device::Device;
 

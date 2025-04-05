@@ -1,10 +1,6 @@
-// gain staging area
-
-use nih_plug::params::FloatParam;
 
 pub struct GainStage {
     pub gain: f32,
-    // pub gain_param: nih_plug::params::FloatParam
 }
 
 impl GainStage {

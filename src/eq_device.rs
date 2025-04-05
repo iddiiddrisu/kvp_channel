@@ -6,12 +6,8 @@ use crate::{
 };
 use device::Device;
 
-use nih_plug::buffer::{self, Buffer};
-use nih_plug::{plugin, prelude::*};
-use std::{
-    num::NonZero,
-    sync::Arc,
-};
+use nih_plug::buffer::Buffer;
+use nih_plug::prelude::*;
 
 pub struct EqDevice {
     input_gain: gain::GainStage,
@@ -19,7 +15,6 @@ pub struct EqDevice {
     pull_eq: Vec<PullEq>,
     push_gain: gain::GainStage,
     push_eq: Vec<PushEq>,
-    // pub eq_params: Arc<EqDeviceParams>,
 }
 
 const NUM_CHANNELS: i8 = 2;
@@ -41,7 +36,6 @@ impl EqDevice {
             push_eq: (0..NUM_CHANNELS)
                 .map(|_| PushEq::new(sample_rate))
                 .collect(),
-            // eq_params: EqDeviceParams::new().into(),
         }
     }
 }
