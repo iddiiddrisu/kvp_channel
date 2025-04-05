@@ -21,8 +21,8 @@ impl ColorizerDeviceParams {
     pub fn new() -> Self {
         Self {
             intensity: FloatParam::new(
-                "Intensity",
-                0.5,
+                "Colorizer:Intensity",
+                0.0,
                 FloatRange::Linear {
                     min: 0.0,
                     max: 1.0,
@@ -33,7 +33,7 @@ impl ColorizerDeviceParams {
             .with_value_to_string(formatters::v2s_f32_percentage(0))
             .with_string_to_value(formatters::s2v_f32_percentage()),
             
-            color_type: EnumParam::new("Color Type", ColorType::Warm),
+            color_type: EnumParam::new("Colorizer:Type", ColorType::Warm),
         }
     }
 }

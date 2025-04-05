@@ -3,7 +3,7 @@ use nih_plug::prelude::Enum;
 pub struct Compressor {
     pub threshold: f32,  // dB
     pub ratio: Ratio,
-    pub reaction_speed: ReactionSpeed,
+    pub preset: CompressionPreset,
     pub sample_rate: f32,
     pub knee_width: f32, // dB, for soft knee
     envelope: f32,
@@ -13,15 +13,20 @@ pub struct Compressor {
     release_coeff: f32,
     gain_attack_coeff: f32,
     gain_release_coeff: f32,
-    lookahead_buffer: Vec<f32>, // Optional lookahead
+    lookahead_buffer: Vec<f32>,
     lookahead_pos: usize,
 }
 
 #[derive(Copy, Clone, Enum, PartialEq)]
-pub enum ReactionSpeed {
-    Fast,
-    Mid,
-    Slow
+pub enum CompressionPreset {
+    Drums,
+    Vocals,
+    Bass,
+    Guitar,
+    Master,
+    Snappy,
+    Glue,
+    Punch
 }
 
 #[derive(Copy, Clone, Enum, PartialEq)]
@@ -33,31 +38,31 @@ pub enum Ratio {
 
 impl Compressor {
     pub fn new(sample_rate: f32) -> Self {
-        let reaction_speed = ReactionSpeed::Mid;
+        let preset = CompressionPreset::Drums;
         let lookahead_samples = (0.005 * sample_rate).round() as usize; // 5ms lookahead
         
         // Calculate coefficients
         let attack_coeff = Self::calculate_coefficient(
-            Self::attack_time(reaction_speed),
+            Self::attack_time(preset),
             sample_rate
         );
         let release_coeff = Self::calculate_coefficient(
-            Self::release_time(reaction_speed),
+            Self::release_time(preset),
             sample_rate
         );
         let gain_attack_coeff = Self::calculate_coefficient(
-            Self::gain_attack_time(reaction_speed),
+            Self::gain_attack_time(preset),
             sample_rate
         );
         let gain_release_coeff = Self::calculate_coefficient(
-            Self::gain_release_time(reaction_speed),
+            Self::gain_release_time(preset),
             sample_rate
         );
 
         Compressor {
             threshold: 0.0,
             ratio: Ratio::Half,
-            reaction_speed,
+            preset,
             sample_rate,
             knee_width: 6.0, // Default 6dB knee width
             envelope: 0.0,
@@ -76,37 +81,55 @@ impl Compressor {
         (-1.0 / (time_in_seconds * sample_rate)).exp() // More accurate coefficient calculation
     }
 
-    pub fn attack_time(speed: ReactionSpeed) -> f32 {
-        match speed {
-            ReactionSpeed::Fast => 0.01,  // 10ms
-            ReactionSpeed::Mid => 0.025,  // 25ms
-            ReactionSpeed::Slow => 0.05   // 50ms
+    pub fn attack_time(preset: CompressionPreset) -> f32 {
+        match preset {
+            CompressionPreset::Drums => 0.005,  // 5ms - fast for transients
+            CompressionPreset::Vocals => 0.015, // 15ms - smooth for vocals
+            CompressionPreset::Bass => 0.02,    // 20ms - preserves bass attack
+            CompressionPreset::Guitar => 0.01,  // 10ms - balanced for guitars
+            CompressionPreset::Master => 0.03,  // 30ms - gentle for mastering
+            CompressionPreset::Snappy => 0.002, // 2ms - ultra fast for snappiness
+            CompressionPreset::Glue => 0.05,    // 50ms - slow for gluing mix elements
+            CompressionPreset::Punch => 0.008   // 8ms - punchy character
         }
     }
     
-    pub fn release_time(speed: ReactionSpeed) -> f32 {
-        match speed {
-            ReactionSpeed::Fast => 0.05,  // 50ms
-            ReactionSpeed::Mid => 0.1,    // 100ms
-            ReactionSpeed::Slow => 0.2    // 200ms
+    pub fn release_time(preset: CompressionPreset) -> f32 {
+        match preset {
+            CompressionPreset::Drums => 0.08,   // 80ms - fast for drums
+            CompressionPreset::Vocals => 0.15,  // 150ms - natural vocal decay
+            CompressionPreset::Bass => 0.12,    // 120ms - tight but warm for bass
+            CompressionPreset::Guitar => 0.1,   // 100ms - balanced for guitars
+            CompressionPreset::Master => 0.25,  // 250ms - gentle for mastering
+            CompressionPreset::Snappy => 0.06,  // 60ms - quick release after snap
+            CompressionPreset::Glue => 0.3,     // 300ms - longer release for cohesion
+            CompressionPreset::Punch => 0.1     // 100ms - punchy character
         }
     }
     
-    // Slightly faster gain attack for more transparent compression
-    pub fn gain_attack_time(speed: ReactionSpeed) -> f32 {
-        match speed {
-            ReactionSpeed::Fast => 0.005,  // 5ms
-            ReactionSpeed::Mid => 0.015,   // 15ms
-            ReactionSpeed::Slow => 0.03    // 30ms
+    pub fn gain_attack_time(preset: CompressionPreset) -> f32 {
+        match preset {
+            CompressionPreset::Drums => 0.003,  // 3ms - fast gain transition for drums
+            CompressionPreset::Vocals => 0.01,  // 10ms - smooth for vocals
+            CompressionPreset::Bass => 0.015,   // 15ms - warm bass response
+            CompressionPreset::Guitar => 0.008, // 8ms - natural for guitars
+            CompressionPreset::Master => 0.02,  // 20ms - transparent for mastering
+            CompressionPreset::Snappy => 0.001, // 1ms - immediate gain control
+            CompressionPreset::Glue => 0.03,    // 30ms - smooth transitions
+            CompressionPreset::Punch => 0.005   // 5ms - quick but not jarring
         }
     }
     
-    // Slightly slower gain release to prevent pumping
-    pub fn gain_release_time(speed: ReactionSpeed) -> f32 {
-        match speed {
-            ReactionSpeed::Fast => 0.08,   // 80ms
-            ReactionSpeed::Mid => 0.15,    // 150ms
-            ReactionSpeed::Slow => 0.25    // 250ms
+    pub fn gain_release_time(preset: CompressionPreset) -> f32 {
+        match preset {
+            CompressionPreset::Drums => 0.1,    // 100ms - prevents pumping on drums
+            CompressionPreset::Vocals => 0.18,  // 180ms - natural vocal flow
+            CompressionPreset::Bass => 0.15,    // 150ms - controlled bass release
+            CompressionPreset::Guitar => 0.12,  // 120ms - balanced for guitars
+            CompressionPreset::Master => 0.3,   // 300ms - transparent for mastering
+            CompressionPreset::Snappy => 0.08,  // 80ms - quick but not abrupt
+            CompressionPreset::Glue => 0.4,     // 400ms - long smooth release
+            CompressionPreset::Punch => 0.15    // 150ms - maintains energy
         }
     }
 
@@ -118,29 +141,29 @@ impl Compressor {
         }
     }
 
-    pub fn set_reaction_speed(&mut self, speed: ReactionSpeed) {
+    pub fn set_preset(&mut self, preset: CompressionPreset) {
         // update only if there is a change
-        if self.reaction_speed != speed {
-            self.reaction_speed = speed;
+        if self.preset != preset {
+            self.preset = preset;
             self.update_coefficients();
         }
     }
 
     fn update_coefficients(&mut self) {
         self.attack_coeff = Self::calculate_coefficient(
-            Self::attack_time(self.reaction_speed),
+            Self::attack_time(self.preset),
             self.sample_rate
         );
         self.release_coeff = Self::calculate_coefficient(
-            Self::release_time(self.reaction_speed),
+            Self::release_time(self.preset),
             self.sample_rate
         );
         self.gain_attack_coeff = Self::calculate_coefficient(
-            Self::gain_attack_time(self.reaction_speed),
+            Self::gain_attack_time(self.preset),
             self.sample_rate
         );
         self.gain_release_coeff = Self::calculate_coefficient(
-            Self::gain_release_time(self.reaction_speed),
+            Self::gain_release_time(self.preset),
             self.sample_rate
         );
     }
@@ -167,7 +190,7 @@ impl Compressor {
         } else {
             delayed_sample = input;
         }
-    
+
         // Level detection on current input for faster response
         let squared = input * input;
         self.envelope = if squared > self.envelope {
@@ -188,22 +211,22 @@ impl Compressor {
             self.prev_excess_db + self.release_coeff * (knee_excess - self.prev_excess_db)
         };
         self.prev_excess_db = smoothed_excess;
-    
+
         // Modified gain calculation to ensure sufficient reduction
         let target_gain_db = if smoothed_excess > 0.0 {
             let ratio = Self::ratio_to_value(self.ratio);
-            -smoothed_excess * (1.0 - 1.0/ratio) // Remove tanh to allow deeper compression
+            -smoothed_excess * (1.0 - 1.0/ratio) // Remove tanh for deeper compression
         } else {
             0.0
         };
-    
+
         let gain_db = if target_gain_db < self.prev_gain_db {
             self.prev_gain_db + (target_gain_db - self.prev_gain_db) * (1.0 - self.gain_attack_coeff)
         } else {
             self.prev_gain_db + (target_gain_db - self.prev_gain_db) * (1.0 - self.gain_release_coeff)
         };
         self.prev_gain_db = gain_db;
-    
+
         // Apply the gain to the delayed sample
         let gain = db_to_linear(gain_db);
         delayed_sample * gain
