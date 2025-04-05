@@ -1,0 +1,16 @@
+[package]
+name = "kvp_channel"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+biquad = "0.5.0"
+compressor = { git = "https://github.com/MindBuffer/compressor.git", version = "0.3.0" }
+nih_plug = { git = "https://github.com/robbert-vdh/nih-plug.git", version = "0.0.0" }
+
+
+[workspace]
+members = ["xtask"]
+
+[lib]
+crate-type = ["cdylib"]
