@@ -234,6 +234,8 @@ impl Compressor {
     
     // Reset the compressor state
     pub fn reset(&mut self) {
+        self.lookahead_pos = 0;
+        self.lookahead_buffer.clear();
         self.envelope = 0.0;
         self.prev_gain_db = 0.0;
         self.prev_excess_db = 0.0;
