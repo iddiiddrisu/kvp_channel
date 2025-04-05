@@ -158,17 +158,17 @@ impl Compressor {
     }
 
     pub fn process(&mut self, input: f32) -> f32 {
-        // Implement lookahead if needed
-        let lookahead_sample = if !self.lookahead_buffer.is_empty() {
-            let output = self.lookahead_buffer[self.lookahead_pos];
+        // Store input in lookahead buffer
+        let delayed_sample;
+        if !self.lookahead_buffer.is_empty() {
+            delayed_sample = self.lookahead_buffer[self.lookahead_pos];
             self.lookahead_buffer[self.lookahead_pos] = input;
             self.lookahead_pos = (self.lookahead_pos + 1) % self.lookahead_buffer.len();
-            output
         } else {
-            input
-        };
+            delayed_sample = input;
+        }
     
-        // RMS-like envelope detection
+        // Level detection on current input for faster response
         let squared = input * input;
         self.envelope = if squared > self.envelope {
             self.envelope + self.attack_coeff * (squared - self.envelope)
@@ -176,15 +176,12 @@ impl Compressor {
             self.envelope + self.release_coeff * (squared - self.envelope)
         };
         
-        // Convert envelope to dB - using the existing linear_to_db function
         let rms_linear = self.envelope.sqrt();
         let rms_db = linear_to_db(rms_linear);
         
-        // Calculate excess with soft knee
         let excess_db = rms_db - self.threshold;
         let knee_excess = self.calculate_knee(excess_db, self.knee_width);
         
-        // Smooth the excess detection
         let smoothed_excess = if knee_excess > self.prev_excess_db {
             self.prev_excess_db + self.attack_coeff * (knee_excess - self.prev_excess_db)
         } else {
@@ -192,27 +189,24 @@ impl Compressor {
         };
         self.prev_excess_db = smoothed_excess;
     
-        // Calculate gain reduction
+        // Modified gain calculation to ensure sufficient reduction
         let target_gain_db = if smoothed_excess > 0.0 {
             let ratio = Self::ratio_to_value(self.ratio);
-            -(smoothed_excess * (1.0 - 1.0/ratio)).tanh() // Soft saturation
+            -smoothed_excess * (1.0 - 1.0/ratio) // Remove tanh to allow deeper compression
         } else {
             0.0
         };
     
-        // Gain smoothing
         let gain_db = if target_gain_db < self.prev_gain_db {
-            // Attack
             self.prev_gain_db + (target_gain_db - self.prev_gain_db) * (1.0 - self.gain_attack_coeff)
         } else {
-            // Release
             self.prev_gain_db + (target_gain_db - self.prev_gain_db) * (1.0 - self.gain_release_coeff)
         };
         self.prev_gain_db = gain_db;
     
-        // Apply gain to lookahead sample
+        // Apply the gain to the delayed sample
         let gain = db_to_linear(gain_db);
-        lookahead_sample * gain
+        delayed_sample * gain
     }
     
     // Reset the compressor state
