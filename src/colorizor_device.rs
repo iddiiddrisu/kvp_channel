@@ -12,9 +12,9 @@ pub struct ColorizerDevice {
 #[derive(Params)]
 pub struct ColorizerDeviceParams {
     #[id = "color_intensity"]
-    intensity: FloatParam,
+    pub intensity: FloatParam,
     #[id = "color_type"]
-    color_type: EnumParam<ColorType>,
+    pub color_type: EnumParam<ColorType>,
 }
 
 impl ColorizerDeviceParams {

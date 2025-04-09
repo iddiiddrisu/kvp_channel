@@ -110,37 +110,37 @@ impl Device for EqDevice {
 #[derive(Params)]
 pub struct EqDeviceParams {
     #[id = "input_gain"]
-    input_gain: FloatParam,
+    pub input_gain: FloatParam,
     #[id = "input_eq_lowpass_mode"]
-    input_eq_lowpass_mode: EnumParam<FilterSlope>,
+    pub input_eq_lowpass_mode: EnumParam<FilterSlope>,
     #[id = "input_eq_lowpass"]
-    input_eq_lowpass: FloatParam,
+    pub input_eq_lowpass: FloatParam,
     #[id = "input_eq_highpass_mode"]
-    input_eq_highpass_mode: EnumParam<FilterSlope>,
+    pub input_eq_highpass_mode: EnumParam<FilterSlope>,
     #[id = "input_eq_highpass"]
-    input_eq_highpass: FloatParam,
+    pub input_eq_highpass: FloatParam,
     #[id = "pull_lowshelf"]
-    pull_lowshelf: FloatParam,
+    pub pull_lowshelf: FloatParam,
     #[id = "pull_lowshelf_gain"]
-    pull_lowshelf_gain: FloatParam,
+    pub pull_lowshelf_gain: FloatParam,
     #[id = "pull_lowpull"]
-    pull_lowpull: FloatParam,
+    pub pull_lowpull: FloatParam,
     #[id = "pull_lowpull_gain"]
-    pull_lowpull_gain: FloatParam,
+    pub pull_lowpull_gain: FloatParam,
     #[id = "pull_highpull"]
-    pull_highpull: FloatParam,
+    pub pull_highpull: FloatParam,
     #[id = "pull_highpull_gain"]
-    pull_highpull_gain: FloatParam,
+    pub pull_highpull_gain: FloatParam,
     #[id = "push_gain"]
-    push_gain: FloatParam,
+    pub push_gain: FloatParam,
     #[id = "push_overtone_push"]
-    push_overtone_push: FloatParam,
+    pub push_overtone_push: FloatParam,
     #[id = "push_overtone_push_gain"]
-    push_overtone_push_gain: FloatParam,
+    pub push_overtone_push_gain: FloatParam,
     #[id = "push_tonal_push"]
-    push_tonal_push: FloatParam,
+    pub push_tonal_push: FloatParam,
     #[id = "push_tonal_push_gain"]
-    push_tonal_push_gain: FloatParam,
+    pub push_tonal_push_gain: FloatParam,
 }
 
 impl EqDeviceParams {

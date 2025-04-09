@@ -1,5 +1,6 @@
 use nih_plug::buffer::Buffer;
 use nih_plug::prelude::*;
+use nih_plug_vizia::ViziaState;
 use std::{
     num::NonZero,
     sync::Arc,
@@ -8,6 +9,9 @@ use std::{
 use crate::colorizor_device::{ColorizerDevice,ColorizerDeviceParams};
 use crate::compressor_device::{CompressorDevice, CompressorDeviceParams};
 use crate::eq_device::{EqDevice, EqDeviceParams};
+use crate::ui::{self, create_editor};
+
+use nih_plug::prelude::*;
 
 
 pub trait Device {
@@ -24,7 +28,8 @@ pub struct KVPChannelPlugin {
     pub eq: EqDevice,
     pub compressor: CompressorDevice,
     pub colorizer: ColorizerDevice,
-    pub params: Arc<KVPChannelPluginParams>
+    pub params: Arc<KVPChannelPluginParams>,
+    pub editor_state: Arc<ViziaState>
 }
 
 impl KVPChannelPlugin {
@@ -37,11 +42,11 @@ impl KVPChannelPlugin {
 
 #[derive(Params)]
 pub struct KVPChannelPluginParams {
-    #[nested]
+    #[nested(id_prefix = "eq")]
     pub eq_params: Arc<EqDeviceParams>,
-    #[nested]
+    #[nested(id_prefix = "compressor")]
     pub compressor_params: Arc<CompressorDeviceParams>,
-    #[nested]
+    #[nested(id_prefix = "colorizer")]
     pub colorizer_params: Arc<ColorizerDeviceParams>,
 }
 
@@ -56,11 +61,17 @@ impl Default for KVPChannelPluginParams {
 }
 
 impl Default for KVPChannelPlugin {
-/// Creates a default instance of `KVPChannelPlugin` with initialized 
-/// equalization, compression, and colorization devices using default parameters.
+    /// Creates a default instance of `KVPChannelPlugin` with initialized 
+    /// equalization, compression, and colorization devices using default parameters.
 
     fn default() -> Self {
-        Self { eq: EqDevice::new(44000.0), compressor: CompressorDevice::default(), colorizer: ColorizerDevice::default() , params: Arc::new(KVPChannelPluginParams::default())}
+        Self {
+            eq: EqDevice::new(44100.0),
+            compressor: CompressorDevice::default(),
+            colorizer: ColorizerDevice::default(),
+            params: Arc::new(KVPChannelPluginParams::default()),
+            editor_state: ViziaState::new(|| (800, 540))
+        }
     }
 }
 
@@ -86,7 +97,7 @@ impl Plugin for KVPChannelPlugin {
     type BackgroundTask = ();
 
     fn params(&self) -> Arc<dyn Params> {
-        self.params.clone()
+        self.params
     }
 
     fn reset(&mut self) {
@@ -106,5 +117,9 @@ impl Plugin for KVPChannelPlugin {
         self.compressor.run(buffer);
         self.colorizer.run(buffer);
         ProcessStatus::Normal
+    }
+
+    fn editor(&mut self, async_executor: AsyncExecutor<Self>) -> Option<Box<dyn Editor>> {
+        create_editor(Arc::clone(&self.params), Arc::clone(&self.editor_state))
     }
 }

@@ -12,6 +12,7 @@ mod colorizer;
 mod colorizor_device;
 mod eq_device;
 mod compressor_device;
+mod ui;
 
 impl ClapPlugin for KVPChannelPlugin {
     const CLAP_ID: &'static str = "com.kvp.studio";

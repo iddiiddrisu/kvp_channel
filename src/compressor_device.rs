@@ -12,11 +12,11 @@ impl Default for CompressorDevice {
 #[derive(Params)]
 pub struct CompressorDeviceParams {
     #[id = "compressor_threshold"]
-    threshold: FloatParam,
+    pub threshold: FloatParam,
     #[id = "compressor_ratio"]
-    ratio: EnumParam<Ratio>,
+    pub ratio: EnumParam<Ratio>,
     #[id = "compressor_preset"]
-    preset: EnumParam<CompressionPreset>
+    pub preset: EnumParam<CompressionPreset>
 }
 
 impl CompressorDeviceParams {

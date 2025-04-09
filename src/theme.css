@@ -1,0 +1,68 @@
+.main-container {
+    background-color: #1E1E1E;
+    color: #EEEEEE;
+    child-space: 10px;
+    row-between: 10px;
+}
+
+.header {
+    background-color: #2A2A2A;
+    height: 50px;
+    child-space: 1s;
+    col-between: 20px;
+    padding: 10px;
+}
+
+.tab-view {
+    border: 1px solid #444;
+    border-radius: 4px;
+}
+
+.section {
+    background-color: #2A2A2A;
+    border-radius: 4px;
+    padding: 15px;
+    child-space: 15px;
+}
+
+.control-group {
+    col-between: 10px;
+    child-space: 1s;
+}
+
+.kvp_knob {
+    background-color: #333;
+    border: 2px solid #6DC7FF;
+    border-radius: 50%;
+}
+
+.dropdown {
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 3px;
+    padding: 5px 10px;
+}
+
+.preset-button {
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 3px;
+    padding: 5px 10px;
+}
+
+.preset-button:checked {
+    background-color: #6DC7FF;
+    color: #111;
+}
+
+.footer {
+    height: 60px;
+    background-color: #2A2A2A;
+    child-space: 1s;
+    col-between: 20px;
+    padding: 10px;
+}
+
+.meter-group {
+    width: 100px;
+}
