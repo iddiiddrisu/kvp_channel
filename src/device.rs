@@ -97,7 +97,7 @@ impl Plugin for KVPChannelPlugin {
     type BackgroundTask = ();
 
     fn params(&self) -> Arc<dyn Params> {
-        self.params
+        self.params.clone()
     }
 
     fn reset(&mut self) {

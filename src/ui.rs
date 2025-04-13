@@ -29,7 +29,7 @@ pub(crate) fn create_editor(
 
         VStack::new(ctx, |cx| {
             Label::new(cx, "KVP CHANNEL")
-                .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                 .font_size(24.0)
                 .height(Pixels(40.0))
                 .text_align(TextAlign::Center);
@@ -39,7 +39,7 @@ pub(crate) fn create_editor(
                 // EQ Section
                 VStack::new(cx, |cx| {
                     Label::new(cx, "EQ")
-                        .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                        .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                         .font_size(18.0)
                         .height(Pixels(30.0))
                         .text_align(TextAlign::Center);
@@ -47,7 +47,7 @@ pub(crate) fn create_editor(
                     // Input Section
                     VStack::new(cx, |cx| {
                         Label::new(cx, "Input")
-                            .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                            .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                             .font_size(16.0)
                             .height(Pixels(20.0));
 
@@ -86,7 +86,7 @@ pub(crate) fn create_editor(
                     // Pull Section
                     VStack::new(cx, |cx| {
                         Label::new(cx, "Pull")
-                            .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                            .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                             .font_size(16.0)
                             .height(Pixels(20.0));
 
@@ -137,7 +137,7 @@ pub(crate) fn create_editor(
                     // Push Section
                     VStack::new(cx, |cx| {
                         Label::new(cx, "Push")
-                            .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                            .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                             .font_size(16.0)
                             .height(Pixels(20.0));
 
@@ -187,14 +187,14 @@ pub(crate) fn create_editor(
                 // Compressor Section
                 VStack::new(cx, |cx| {
                     Label::new(cx, "COMPRESSOR")
-                        .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                        .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                         .font_size(18.0)
                         .height(Pixels(30.0))
                         .text_align(TextAlign::Center);
 
                     // Preset
                     Label::new(cx, "Preset")
-                        .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                        .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                         .font_size(16.0)
                         .height(Pixels(20.0));
 
@@ -203,7 +203,7 @@ pub(crate) fn create_editor(
 
                     // Threshold
                     Label::new(cx, "Threshold")
-                        .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                        .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                         .font_size(16.0)
                         .height(Pixels(20.0));
 
@@ -212,7 +212,7 @@ pub(crate) fn create_editor(
 
                     // Ratio
                     Label::new(cx, "Ratio")
-                        .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                        .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                         .font_size(16.0)
                         .height(Pixels(20.0));
 
@@ -227,14 +227,14 @@ pub(crate) fn create_editor(
                 // Colorizer Section
                 VStack::new(cx, |cx| {
                     Label::new(cx, "COLORIZER")
-                        .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                        .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                         .font_size(18.0)
                         .height(Pixels(30.0))
                         .text_align(TextAlign::Center);
 
                     // Type
                     Label::new(cx, "Type")
-                        .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                        .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                         .font_size(16.0)
                         .height(Pixels(20.0));
 
@@ -243,7 +243,7 @@ pub(crate) fn create_editor(
 
                     // Intensity
                     Label::new(cx, "Intensity")
-                        .font_family(vec![FamilyOwned::Name(String::from("Noto Sans Bold"))])
+                        .font_family(vec![FamilyOwned::Name(String::from(assets::NOTO_SANS))])
                         .font_size(16.0)
                         .height(Pixels(20.0));
 
@@ -258,7 +258,7 @@ pub(crate) fn create_editor(
             .height(Percentage(95.0))
             .child_space(Stretch(1.0));
         })
-        .background_color(Color::aqua())
+        .background_color(Color::blanchedalmond())
         .width(Pixels(800.0))
         .height(Pixels(540.0));
     })
