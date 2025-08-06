@@ -1,2 +1,4 @@
 /target
 .pdf
+.errorviz-version
+src/ui copy.rs

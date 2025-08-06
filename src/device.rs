@@ -11,7 +11,6 @@ use crate::compressor_device::{CompressorDevice, CompressorDeviceParams};
 use crate::eq_device::{EqDevice, EqDeviceParams};
 use crate::ui::{self, create_editor};
 
-use nih_plug::prelude::*;
 
 
 pub trait Device {
